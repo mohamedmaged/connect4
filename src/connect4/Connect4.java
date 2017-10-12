@@ -4,8 +4,6 @@
  * and open the template in the editor.
  */
 package connect4;
-
-
 import java.util.ArrayList;
 import java.util.List;
 import javafx.animation.TranslateTransition;
@@ -15,7 +13,10 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.Skin;
 import javafx.scene.effect.Light;
@@ -28,6 +29,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.util.Pair;
 
 /**
  *
@@ -36,6 +38,7 @@ import javafx.util.Duration;
 public class Connect4 extends Application {
     private static final  int TITLE_SIZE=80;
     boolean red=true;
+    int n=0;
     BoardGui myGui=new BoardGui();
      Pane coinRoot=new Pane();
 Board myBoard=new Board();
@@ -47,6 +50,7 @@ Player two=new Player("yellow","*");
       primaryStage.setTitle("connect 4");
         primaryStage.setScene(new Scene(createContent()));
         primaryStage.show();
+
         
     }
 
@@ -59,7 +63,6 @@ Player two=new Player("yellow","*");
 
     private Parent createContent() {
         Pane root=new Pane();
-   //     Shape gridShape=makeGrid();
         myBoard.create(myBoard);
         root.getChildren().add(myGui.makeGrid());
         root.getChildren().add(coinRoot);
@@ -70,6 +73,7 @@ Player two=new Player("yellow","*");
   
     private List<Rectangle> colums(){
         List<Rectangle> list=new ArrayList<>();
+      
         for (int x = 0; x < 7; x++) {
             Rectangle rec=new Rectangle(TITLE_SIZE,7*TITLE_SIZE);
             rec.setTranslateX( x *(TITLE_SIZE+7)+TITLE_SIZE/4);
@@ -77,15 +81,34 @@ Player two=new Player("yellow","*");
             rec.setOnMouseEntered(e->rec.setFill(Color.rgb(200, 200, 50, 0.3)));
             rec.setOnMouseExited(e->rec.setFill(Color.TRANSPARENT));
             list.add(rec);
+            
              int colum=x;
-            rec.setOnMouseClicked(e->placeDisk(new Coin(red),colum));
+            
+                 rec.setOnMouseClicked(e->placeDisk(new Coin(red),colum));
+             
+           
         }
+        
             return list;
 
     }
     private void placeDisk(Coin coin,int colum)
     {
+       /* if(!myBoard.check_empty(myBoard))
+        {
+            Alert alert = new Alert(AlertType.INFORMATION);
+alert.setTitle("Information Dialog");
+alert.setHeaderText(" Information" );
+alert.setContentText("sorry there is no other places to play in ");
+alert.showAndWait();
+  myBoard.create(myBoard);
+ coinRoot.getChildren().remove(0, n);
+           n=0;
+        }*/
+          if(!myBoard.check_before_play(colum, myBoard))
+              return;
         coinRoot.getChildren().add(coin);
+        n++;
         coin.setTranslateX(colum*(TITLE_SIZE+7)+TITLE_SIZE/4);
        
        
@@ -99,16 +122,32 @@ Player two=new Player("yellow","*");
            /* if (gameEnded(column, currentRow)) {
                 gameOver();
             }
-
             redMove = !redMove;*/
         });
         animation.play();
         if( myBoard.check_for_winner(myBoard, one))
-           System.out.println("red won");
-        if(myBoard.check_for_winner(myBoard, two))
-                   System.out.println("yellow won");
-                        red=!red;
+        {
+           Alert alert = new Alert(AlertType.INFORMATION);
+alert.setTitle("Game Over");
+alert.setHeaderText("WINNER");
+alert.setContentText("RED : CONGRATULATIONS YOU HAVE WON ");
 
+alert.showAndWait();
+       /*    System.out.println("red won");
+           System.exit(0);
+           coinRoot.getChildren().remove(0, n);
+           myBoard.create(myBoard);
+           n=0;*/
+        }
+        if(myBoard.check_for_winner(myBoard, two))
+                   {
+                   Alert alert = new Alert(AlertType.INFORMATION);
+alert.setTitle("Game Over");
+alert.setHeaderText("WINNER");
+alert.setContentText("YELLLOW : CONGRATULATIONS YOU HAVE WON ");
+alert.showAndWait();
+    }
+                        red=!red;
         }
        
        

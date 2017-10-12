@@ -1,4 +1,8 @@
 package connect4;
+
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+
 public class Board {
 	private static final int row=6;///row number
 	private static final int  colum=7;//column number
@@ -45,8 +49,12 @@ public boolean check_before_play(int colum,Board ar){
      }
 	 else if(ar.arr[0][colum]!=" ") // check if the colum isn't already filled 
      {
-         System.out.println("please enter another colum to fill");
-         return false;
+Alert alert = new Alert(AlertType.WARNING);
+alert.setTitle("Warning Dialog");
+alert.setHeaderText(" Warning");
+alert.setContentText("Wrong colum to play in !");
+
+alert.showAndWait();         return false;
      }
 	 
 	return true;
