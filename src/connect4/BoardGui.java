@@ -30,7 +30,6 @@ public class BoardGui {
   int n=0;
     private static final  int TITLE_SIZE=80;
 
-
 public Shape makeGrid() {
         Shape shape=new Rectangle(8*TITLE_SIZE,TITLE_SIZE*7);
         for(int y=0;y<6;y++)
@@ -43,7 +42,6 @@ public Shape makeGrid() {
                circle.setTranslateX( x *(TITLE_SIZE+7)+TITLE_SIZE/4);
                 circle.setTranslateY(y *(TITLE_SIZE+7)+TITLE_SIZE/4);
               shape=  shape.subtract(shape, circle);
-
             }  
         }
         Light.Distant light=new Light.Distant();
@@ -59,19 +57,39 @@ public Shape makeGrid() {
     }
  public void placeDisk(Coin coin,int colum,Board myBoard,Pane coinRoot,Player one,Player two)
     {
-       /* if(!myBoard.check_empty(myBoard))
+       
+        if(!myBoard.check_empty(myBoard))
         {
-            Alert alert = new Alert(AlertType.INFORMATION);
-alert.setTitle("Information Dialog");
-alert.setHeaderText(" Information" );
-alert.setContentText("sorry there is no other places to play in ");
-alert.showAndWait();
-  myBoard.create(myBoard);
- coinRoot.getChildren().remove(0, n);
+             Alert alert = new Alert(AlertType.INFORMATION);
+alert.setTitle("NO winner ");
+alert.setHeaderText("No WNNNER");
+alert.setContentText("THE BOARD IS FULLL");
+
+ButtonType buttonTypeOne = new ButtonType("Restart");
+ButtonType buttonTypeTwo = new ButtonType("EXIT");
+
+
+alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeTwo);
+
+Optional<ButtonType> result = alert.showAndWait();
+if (result.get() == buttonTypeOne){
+    // ... user chose "One"
+    coinRoot.getChildren().remove(0, n);
+           myBoard.create(myBoard);
            n=0;
-        }*/
-          if(!myBoard.check_before_play(colum, myBoard))
-              return;
+} 
+else if (result.get() == buttonTypeTwo) {
+               System.exit(0);
+               
+} 
+return;
+        }
+        
+         try{
+       
+        
+          myBoard.check_before_play(colum, myBoard);
+              //return;
         coinRoot.getChildren().add(coin);
         n++;
         coin.setTranslateX(colum*(TITLE_SIZE+7)+TITLE_SIZE/4);
@@ -106,6 +124,10 @@ alert.showAndWait();
     }
                         red=!red;
         }
+    catch(FullColumnException e){
+        e.handleException();
+    }
+    }
    public List<Rectangle> colums(Board myBoard,Pane coinRoot,Player one ,Player two){
         List<Rectangle> list=new ArrayList<>();
       
@@ -146,9 +168,7 @@ if (result.get() == buttonTypeOne){
            n=0;
 } 
 else if (result.get() == buttonTypeTwo) {
-    // ... user chose "Two"
                System.exit(0);
-
 } 
 }
 }

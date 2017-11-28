@@ -10,7 +10,6 @@ public class Board {
     public static int getRow() {
         return row;
     }
-
     public static int getColum() {
         return colum;
     }
@@ -41,23 +40,17 @@ public class Board {
 	        }
                 return i;
 	    }
-public boolean check_before_play(int colum,Board ar){
+public void check_before_play(int colum,Board ar)throws FullColumnException{
 	 if(colum>6)   // if he enter a colum number exceeded the limit 
      {
          System.out.println("wrong colum");
-         return false;         
+         //return false;         
      }
 	 else if(ar.arr[0][colum]!=" ") // check if the colum isn't already filled 
      {
-Alert alert = new Alert(AlertType.WARNING);
-alert.setTitle("Warning Dialog");
-alert.setHeaderText(" Warning");
-alert.setContentText("Wrong colum to play in !");
-
-alert.showAndWait();         return false;
-     }
-	 
-	return true;
+             throw new FullColumnException();
+            
+}
 }
 
 public boolean check_for_winner(Board ar ,Player x){
@@ -101,7 +94,7 @@ public boolean check_for_winner(Board ar ,Player x){
 }
 public boolean check_empty(Board ar){
 	 for(int i=0;i<colum;i++){
-		    if(ar.arr[1][i].equals(" "))
+		    if(ar.arr[0][i].equals(" "))
 		    	return true;
      }
 	return false ;
